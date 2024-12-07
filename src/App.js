@@ -39,10 +39,7 @@ function App() {
         <div>
             <PostFilter filter={filter} setFilter={setFilter}/>
         </div>
-        {sortedAndSearchedPosts.length
-           ? <PostList remove = {removePost} posts={sortedAndSearchedPosts} title={'Javascript'} />
-            : <h1 style={{textAlign: "center"}}>Посты отсутствуют</h1>
-        }
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
     </div>
   );
 }
