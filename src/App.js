@@ -1,5 +1,5 @@
 import './styles/App.css'
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
@@ -33,11 +33,12 @@ function App() {
         setPosts(response.data);
     }
 
+    useEffect(()=>{
+        fetchPosts();
+    }, [])
+
     return (
         <div className="App">
-            <MyButton onClick={fetchPosts}>
-                Получить посты
-            </MyButton>
             <MyButton style={{marginTop: 10}} onClick={() => setModalOpen(true)}>
                 Создать пост
             </MyButton>
