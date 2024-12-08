@@ -8,9 +8,11 @@ import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
 import axios from "axios";
 import PostService from "./API/PostService";
+import MyLoader from "./components/UI/Loader/MyLoader";
 
 function App() {
     const [posts, setPosts] = useState([])
+    const [isPostsLoading, setIsPostsLoading] = useState(false)
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -30,8 +32,12 @@ function App() {
     const [modalOpen, setModalOpen] = useState(false);
 
     async function fetchPosts(){
-        const posts = await  PostService.getAllPosts();
-        setPosts(posts);
+        setIsPostsLoading(true);
+        setTimeout(async ()=>{
+            const posts = await  PostService.getAllPosts();
+            setPosts(posts);
+            setIsPostsLoading(false);
+        }, 1000)
     }
 
     useEffect(()=>{
@@ -50,7 +56,10 @@ function App() {
             <div>
                 <PostFilter filter={filter} setFilter={setFilter}/>
             </div>
-            <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
+            {isPostsLoading
+            ? <div style={{display: "flex", justifyContent: "center", marginTop: 50}}><MyLoader/></div>
+            : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
+            }
         </div>
     );
 }
