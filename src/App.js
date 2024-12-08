@@ -1,11 +1,12 @@
 import './styles/App.css'
-import {useMemo, useState} from "react";
+import {useState} from "react";
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
+import axios from "axios";
 
 function App() {
     const [posts, setPosts] = useState([])
@@ -27,8 +28,16 @@ function App() {
 
     const [modalOpen, setModalOpen] = useState(false);
 
+    async function fetchPosts(){
+        const responce = await  axios.get("http://localhost:5095/Post");
+        setPosts(responce.data);
+    };
+
     return (
         <div className="App">
+            <MyButton onClick={fetchPosts}>
+                Получить посты
+            </MyButton>
             <MyButton style={{marginTop: 10}} onClick={() => setModalOpen(true)}>
                 Создать пост
             </MyButton>
