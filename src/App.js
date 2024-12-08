@@ -29,9 +29,9 @@ function App() {
     const [modalOpen, setModalOpen] = useState(false);
 
     async function fetchPosts(){
-        const responce = await  axios.get("http://localhost:5095/Post");
-        setPosts(responce.data);
-    };
+        const response = await  axios.get("http://localhost:5095/Post");
+        setPosts(response.data);
+    }
 
     return (
         <div className="App">
