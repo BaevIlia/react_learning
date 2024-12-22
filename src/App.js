@@ -28,7 +28,6 @@ function App() {
 
     const [filter, setFilter] = useState({sort: "", query: ""});
 
-
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
 
