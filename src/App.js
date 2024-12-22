@@ -9,12 +9,21 @@ import {usePosts} from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import MyLoader from "./components/UI/Loader/MyLoader";
 import {useFetching} from "./hooks/useFetching";
+import {getPagesCount} from "./utils/pages";
+import Pagination from "./components/UI/Pagination";
 
 function App() {
-    const [posts, setPosts] = useState([])
-    const [fetchPosts, isPostsLoading, postError] = useFetching(async ()=>{
-        const posts = await  PostService.getAllPosts();
-        setPosts(posts);
+
+    const [posts, setPosts] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
+
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
+        const response = await PostService.getAllPosts(limit, page);
+        setPosts(response.data);
+        const totalCount = response.headers['x-total-count'];
+        setTotalPages(getPagesCount(totalCount, limit));
     })
 
     const createPost = (newPost) => {
@@ -33,9 +42,14 @@ function App() {
 
     const [modalOpen, setModalOpen] = useState(false);
 
-    useEffect(()=>{
-        fetchPosts();
+    useEffect(() => {
+        fetchPosts(limit, page);
     }, [])
+
+    const changePage = (page) =>{
+        setPage(page);
+        fetchPosts(limit, page)
+    }
 
     return (
         <div className="App">
@@ -53,9 +67,14 @@ function App() {
                 <h1>Произошла ошибка: ${postError}</h1>
             }
             {isPostsLoading
-            ? <div style={{display: "flex", justifyContent: "center", marginTop: 50}}><MyLoader/></div>
-            : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
+                ? <div style={{display: "flex", justifyContent: "center", marginTop: 50}}><MyLoader/></div>
+                : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
             }
+            <Pagination page = {page}
+                        setPage={changePage}
+                        totalPages={totalPages}
+            />
+
         </div>
     );
 }
