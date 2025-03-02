@@ -71,7 +71,7 @@ function App() {
                 : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты"/>
             }
             <Pagination page = {page}
-                        setPage={changePage}
+                        changePage={changePage}
                         totalPages={totalPages}
             />
 
